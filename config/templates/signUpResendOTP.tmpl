@@ -1,0 +1,15 @@
+{
+      "endpoint": "/signUp/resendOtp",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["id"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/signUp:resendOtp",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["{{ .service.eshop_host }}"]
+        }
+      ]
+    }

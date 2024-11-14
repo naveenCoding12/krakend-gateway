@@ -1,0 +1,18 @@
+{
+      "endpoint": "/admin/translations/allPage",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["messageKey","applicationId","languageId","absolute","pageNo","pageSize"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:page",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ],
+       "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

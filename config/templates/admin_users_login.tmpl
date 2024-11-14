@@ -1,0 +1,14 @@
+{
+      "endpoint": "/admin/users/login",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/users:login",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ]
+    }

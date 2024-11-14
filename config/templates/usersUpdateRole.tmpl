@@ -1,0 +1,22 @@
+{
+      "endpoint": "/users/updateRole",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "input_query_strings": [
+        "userId","roleId"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:updateRole",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host":  ["{{ .service.eshop_host }}"]
+        }
+      ],
+      "extra_config": {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

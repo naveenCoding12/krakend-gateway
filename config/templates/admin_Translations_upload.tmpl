@@ -1,0 +1,18 @@
+{
+      "endpoint": "/admin/translations/uploadExcel",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_Strings" :["langId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:uploadExcel",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ],
+       "extra_config":  {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

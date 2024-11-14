@@ -1,0 +1,19 @@
+  {
+    "endpoint": "/configurations:save",
+    "method": "POST",
+    "output_encoding": "no-op",
+    "input_headers": [
+      "Authorization"
+    ],
+    "backend": [
+      {
+        "url_pattern": "/eshop/v1/configurations:save",
+        "encoding": "no-op",
+        "method": "POST",
+         "host":  ["{{ .service.eshop_host }}"]
+      }
+    ],
+    "extra_config":  {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

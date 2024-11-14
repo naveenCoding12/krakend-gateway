@@ -1,0 +1,22 @@
+{
+      "endpoint": "/customPlanRequests/closeTicket",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "input_query_strings": [
+        "id"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/customPlanRequests:closeTicket",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["{{ .service.eshop_host }}"]
+        }
+      ],
+       "extra_config": {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

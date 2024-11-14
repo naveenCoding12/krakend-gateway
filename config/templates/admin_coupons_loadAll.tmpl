@@ -1,0 +1,19 @@
+ {
+      "endpoint": "/admin/coupons",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["{{ .service.admin_host }}"]
+        }
+      ],
+      "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

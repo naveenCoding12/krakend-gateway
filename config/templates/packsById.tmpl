@@ -1,0 +1,14 @@
+{
+      "endpoint": "/packs/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/packs/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["{{ .service.eshop_host }}"]
+        }
+      ]
+    }

@@ -1,0 +1,16 @@
+ {
+      "endpoint": "/translations/keyValue",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["applicationId","languageId"],
+      "timeout":"600s",
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/translations:keyValue",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["{{ .service.eshop_host }}"]
+        }
+      ]
+    }

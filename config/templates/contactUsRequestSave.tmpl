@@ -1,0 +1,17 @@
+{
+      "endpoint": "/contactUsRequests:save",
+       "timeout": "100s",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsRequests:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["{{ .service.eshop_host }}"],
+          "extra_config": {
+            "headers_to_pass": ["Content-Type"]
+          }
+        }
+      ]
+    }

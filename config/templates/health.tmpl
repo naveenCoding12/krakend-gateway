@@ -1,0 +1,13 @@
+{
+  "endpoint": "/health",
+  "output_encoding": "no-op",
+  "backend": [
+    {
+      "url_pattern": "/admin/v1/health",
+      "encoding": "no-op",
+      "host": [
+        "http://host.docker.internal:9090"
+      ],
+    }
+    ]
+  }

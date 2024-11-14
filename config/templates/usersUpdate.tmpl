@@ -1,0 +1,19 @@
+{
+      "endpoint": "/users/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:update",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host": ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

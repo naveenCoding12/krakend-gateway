@@ -1,0 +1,14 @@
+{
+    "endpoint": "/login",
+    "method": "POST",
+    "output_encoding": "no-op",
+    "backend": [
+      {
+        "url_pattern": "/auth/login",
+        "encoding": "no-op",
+        "method": "POST",
+        "host":  ["{{ .service.auth_host }}"]
+      }
+    ],
+    "_comment": "Retrieving Keycloak token based on username and password"
+  }

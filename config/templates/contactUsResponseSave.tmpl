@@ -1,0 +1,21 @@
+ {
+      "endpoint": "/contactUsResponse:save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization",
+        "Content-Type"
+      ],
+      "timeout":"600s",
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsResponse:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["{{ .service.eshop_host }}"]
+        }
+      ],
+       "extra_config":  {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

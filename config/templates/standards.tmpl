@@ -1,0 +1,11 @@
+ {
+    "endpoint": "/standards",
+    "output_encoding": "no-op",
+    "backend": [
+       {
+        "url_pattern": "/admin/v1/standards",
+        "encoding": "no-op",
+        "host":  ["{{ .service.eshop_host }}"]
+      }
+    ]
+  }

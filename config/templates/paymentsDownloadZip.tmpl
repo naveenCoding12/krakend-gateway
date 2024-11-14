@@ -1,0 +1,18 @@
+{
+      "endpoint": "/payments/downloadZip",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["orderSlug","userPaymentEmailSlug"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/payments:downloadZip",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["{{ .service.eshop_host }}"]
+        }
+      ],
+       "extra_config":  {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

@@ -1,0 +1,18 @@
+{
+      "endpoint": "/application/allPage",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["page","pageNo","pageSize"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:allPage",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ],
+       "extra_config": {
+        {{ include "admin_auth_config.tmpl" }}
+       }
+    }

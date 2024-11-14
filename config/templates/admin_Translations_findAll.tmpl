@@ -1,0 +1,18 @@
+{
+      "endpoint": "/admin/translations/keyValue",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_Strings":["applicationId","languageId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:keyValue",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ],
+       "extra_config":  {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

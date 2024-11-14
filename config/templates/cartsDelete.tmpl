@@ -1,0 +1,18 @@
+{
+      "endpoint": "/carts/delete",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["userId","documentId"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/carts:delete",
+          "encoding": "no-op",
+          "method": "DELETE",
+           "host":  ["{{ .service.eshop_host }}"]
+        }
+      ],
+       "extra_config": {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

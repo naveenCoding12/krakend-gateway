@@ -1,0 +1,24 @@
+ {
+      "endpoint": "/users/search",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "email"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:search",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": [
+            "http://host.docker.internal:9092"
+          ]
+        }
+      ],
+      "extra_config":  {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

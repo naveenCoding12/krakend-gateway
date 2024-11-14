@@ -1,0 +1,3329 @@
+{
+  "version": 3,
+  "name": "API Gateway",
+  "port": "8080",
+  "timeout": "3s",
+  "output_encoding": "no-op",
+  "extra_config": {
+  "security/cors": {
+        "allow_origins": [
+          "*"
+        ],
+        "allow_methods": [
+          "GET",
+          "HEAD",
+          "POST"
+        ],
+        "expose_headers": [
+          "Content-Length",
+          "Content-Type",
+          "*"
+        ],
+        "allow_headers": [
+          "Accept-Language",
+          "*"
+        ],
+        "max_age": "12h",
+        "allow_credentials": false,
+        "debug": false
+      },
+    "telemetry/opentelemetry": {
+      "metric_reporting_period": 10,
+      "exporters": {
+        "prometheus": [
+          {
+            "port": 9091,
+            "name": "krakend"
+          }
+        ]
+      }
+    }
+  },
+  "endpoints": [
+      {
+    "endpoint": "/login",
+    "method": "POST",
+    "output_encoding": "no-op",
+    "backend": [
+      {
+        "url_pattern": "/auth/login",
+        "encoding": "no-op",
+        "method": "POST",
+        "host":  ["http://host.docker.internal:9099"]
+      }
+    ],
+    "_comment": "Retrieving Keycloak token based on username and password"
+  },
+      {
+      "endpoint": "/categories/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/categories/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/categories/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/categoryPackages/save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       },
+      "_comment": "This API requires a valid Keycloak token with the 'realm_user' role for access, ensuring secure and authorized requests."
+    },
+       {
+      "endpoint": "/contactUsRequests",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsRequests",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/contactUsRequests:save",
+       "timeout": "100s",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsRequests:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["http://host.docker.internal:9092"],
+          "extra_config": {
+            "headers_to_pass": ["Content-Type"]
+          }
+        }
+      ]
+    },
+      {
+      "endpoint": "/contactUsRequests:delete",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_query_strings": [
+        "id"
+      ],
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsRequests:delete",
+          "encoding": "no-op",
+          "method": "DELETE",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+     "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/contactUsResponse:save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization",
+        "Content-Type"
+      ],
+      "timeout":"600s",
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsResponse:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/contactUsTickets/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsTickets/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/contactUsTickets",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/contactUsTickets",
+          "encoding": "no-op",
+          "host": [
+            "http://host.docker.internal:9092"
+          ]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+        {
+      "endpoint": "/countries",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/countries",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+       {
+      "endpoint": "/coupons",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/coupons",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/coupons:validCode",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "code","userId"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/coupons:validCode",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/coupons/getUsersByCode",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "code"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/coupons:getUsersByCode",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/coupons/region",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "id"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/coupons:region",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/customPlanRequests",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "id"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/customPlanRequests",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/customPlanRequests:save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "input_query_strings": [
+        "id"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/customPlanRequests:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/customPlanRequests/closeTicket",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "input_query_strings": [
+        "id"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/customPlanRequests:closeTicket",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/documents",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "categoryId"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/documents:save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/documents:getByCatAndStandId",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings": ["categoryId","standardId"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:getByCatAndStandId",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+       {
+      "endpoint": "/documents/searchByName",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "name"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:searchByName",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/documents/update",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:update",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/documents/download",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "docLocation"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:download",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/documents/updateDiscount",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:updateDiscount",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+     "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/documents/search",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+       "categoryId","standardId","docName"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:search",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/documents/getAllDocuments",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/documents:getAllDocuments",
+          "encoding": "no-op",
+          "method": "GET",
+         "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      
+{
+      "endpoint": "/users/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+          {
+      "endpoint": "/users/login",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:login",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/users",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+     "extra_config": {
+            "qos/http-cache": {
+              "@comment": "This API returns a cache-control: max-age=6000 so KrakenD will cache this for 60s"
+            },
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "response"
+                ],
+                "name": "Caching",
+                "value": "max-age=600, public",
+                "@comment": "We will change the max-age policy before KrakenD checks the content for caching. Now content is cached 60 seconds."
+              }
+            }
+          }
+        },
+      {
+      "endpoint": "/users/updateRole",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "input_query_strings": [
+        "userId","roleId"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:updateRole",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/roles",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/roles",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+       {
+      "endpoint": "/users/search",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "email"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:search",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": [
+            "http://host.docker.internal:9092"
+          ]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/users/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:update",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host": ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/users/resetPassword",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "input_query_strings":["email"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:resetPassword",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/users/changePassword",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:changePassword",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/orders",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "email"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/orders",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/orders/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/orders/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/orders/userOrderDetails/{userId}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["userId"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/orders/userOrderDetails/{userId}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/orders/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["email"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/orders:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/packs",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/packs",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/packs/{id}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/packs/{id}",
+          "encoding": "no-op",
+          "method": "DELETE",
+          "host": ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/packs/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/packs/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/packs/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/packs:update",
+          "encoding": "no-op",
+          "method": "PUT",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+     "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/packs/packMap/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/packs:packMap/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/packs/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/packs:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/signUp/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/signUp:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/signUp/verifyEmail",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["userId","mail","otp"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/signUp:verifyEmail",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/signUp/resendOtp",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["id"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/signUp:resendOtp",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/signUp/updateEmail",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["userId","mail"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/signUp:updateEmail",
+          "encoding": "no-op",
+          "method": "PUT",
+         "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/standardCategories",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/standardCategories",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":{
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/standards:getCategory",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["standardId","categoryId"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/standards:getCategory",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+       {
+      "endpoint": "/standards/getCategoryByStandardId",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["standardId"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/standards:getCategoryByStandardId",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+       {
+    "endpoint": "/standards",
+    "output_encoding": "no-op",
+    "backend": [
+       {
+        "url_pattern": "/admin/v1/standards",
+        "encoding": "no-op",
+        "host":  ["http://host.docker.internal:9092"]
+      }
+    ]
+  },
+      {
+      "endpoint": "/translations/langAbsolute",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_query_strings":["fromEshop"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/translations:langAbsolute",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+       {
+      "endpoint": "/translations/keyValue",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["applicationId","languageId"],
+      "timeout":"600s",
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/translations:keyValue",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/transactions/{locale}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/transactions/{locale}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/carts",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["userId"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/carts",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/carts/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/carts:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/carts/delete",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["userId","documentId"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/carts:delete",
+          "encoding": "no-op",
+          "method": "DELETE",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config": {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/savedCards:save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["saveCard"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/savedCards:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/payments:login",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["saveCard"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/payments:login",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+      "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/payments/downloadZip",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["orderSlug","userPaymentEmailSlug"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/payments:downloadZip",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9092"]
+        }
+      ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+      {
+      "endpoint": "/payments/initiatePayment",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/payments:initiatePayment",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9092"]
+        }
+     ],
+       "extra_config":  {
+            "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_user"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+    }
+  
+       }
+    },
+
+      {
+      "endpoint": "/application/masterAll",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:masterAll",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/application/masterAll/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/application/findAll",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:findAll",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/application/allPage",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["page","pageNo","pageSize"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:allPage",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config": {
+        
+       }
+    },
+      {
+      "endpoint": "/application/delete",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["ids"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:delete",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":{
+       
+       }
+    },
+      {
+      "endpoint": "/application/upload",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:upload",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+
+      {
+      "endpoint": "/categories",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categories",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":{
+        "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_cms"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+  },
+            "qos/http-cache": {
+  "@comment": "This API returns a cache-control: max-age=6000 so KrakenD will cache this for 60s"
+},
+"modifier/martian": {
+  "header.Modifier": {
+    "scope": [
+      "response"
+    ],
+    "name": "Cache-Control",
+    "value": "max-age=60, public",
+    "@comment": "We will change the max-age policy before KrakenD checks the content for caching. Now content is cached 60 seconds."
+  }
+}
+        }
+    },
+      {
+      "endpoint": "/categories/delete/{id}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categories:delete/{id}",
+          "encoding": "no-op",
+          "method": "DELETE",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/categories/find/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categories/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/categories/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categories:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/categories/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categories:update",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/configurations",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/configurations",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/configurations/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/configurations:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/configurations/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/configurations:update",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/contactUsRequests",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/contactUsRequests",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/contactUsRequests/saveResponse",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/contactUsRequests/saveResponse",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+       {
+      "endpoint": "/admin/coupons",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/coupons/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/coupons/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/coupons/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons:update",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/coupons/delete/{id}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons/{id}",
+          "encoding": "no-op",
+          "method": "DELETE",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/coupons/getByCode",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "input_query_strings": [
+        "code"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons:getByCode",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+        {
+      "endpoint": "/admin/countries",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/countries",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ]
+    },
+      {
+      "endpoint": "/coupons/importExcel",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons:importExcel",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/customPlan",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/customPlan",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/customPlan/closeTicket",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/customPlan:closeTicket",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/language/upload",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/language:upload",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/language/deleteByIds",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["ids"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/language:deleteByIds",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/language/update",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/language:update",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/language/allPage",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["language","pageNo","pageSize"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/language:allPage",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/language/saveAll",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/language:saveAll",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/language/findAll",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/language:findAll",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+      
+      {
+      "endpoint": "/admin/messageKey/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/messageKey:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/messageKey/upload",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/messageKey:upload",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/messageKey/findAll",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_Strings":["applicationPageId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/messageKey:findAll",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/messageKey/deleteByIds",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["ids"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/messageKey:delete",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/messageKey/allPage",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_strings":["msgKey","pageNo","pageSize"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/messageKey:allPage",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config": {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/roles",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/roles",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/roles/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/roles:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/standardCategories",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/standardCategories",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/standardCategories/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/standardCategories:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/standards",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/standards",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/standards/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/standards/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/standards/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/standards:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/standards/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/standards:update",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/users",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/users",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/users/login",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/users:login",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ]
+    },
+
+      {
+      "endpoint": "/admin/translations/keyValue",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_Strings":["applicationId","languageId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:keyValue",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/delete",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_Strings" :["translationId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:delete",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/lang",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_Strings" :["fromEshop"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:lang",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/uploadExcel",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_Strings" :["langId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:uploadExcel",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/allPage",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["messageKey","applicationId","languageId","absolute","pageNo","pageSize"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:page",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/languages",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["languageIds"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:languages",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/changeLanguage",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["translationIds","currentLangId","toLangId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:changeLanguage",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/deleteAll",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["translationIds","languageId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:deleteAll",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/ids",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["applicationPageId","languageId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:ids",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/versions",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["applicationId","languageId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:versions",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/translations/swap",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings" : ["translationIds","currentLangId","toLangId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translationsswap",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+      {
+      "endpoint": "/admin/categoryPackages/",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categoryPackages/",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":  {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/categoryPackages/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categoryPackages/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/categoryPackages/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categoryPackages/save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/categoryPackages/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categoryPackages/update",
+          "encoding": "no-op",
+          "method": "PUT",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+      {
+      "endpoint": "/admin/categoryPackages/delete/{id}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/categoryPackages/delete/{id}",
+          "encoding": "no-op",
+          "method": "DELETE",
+          "host": ["http://host.docker.internal:9090"]
+        }
+      ],
+       "extra_config":   {
+        
+        }
+    },
+
+       {
+      "endpoint": "/admin/customPlans",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/customPlans",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/customPlans/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/customPlans:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/customPlans/update",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/customPlans:update",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/customPlans/delete",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["id"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/customPlans:delete",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+
+       {
+      "endpoint": "/admin/packs",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        "headers_to_pass": ["Authorization","Content-Type"],
+    "auth/validator": {
+      "alg": "RS256",
+      "jwk_url": "http://host.docker.internal:9999/realms/SyngenityKeycloak/protocol/openid-connect/certs",
+      "roles_key": "realm_access.roles",
+      "roles_key_is_nested": true,
+      "roles": ["realm_sms"],
+      "claims": {   
+        "exp": true,
+        "iat": true
+      },
+      "scopes_key": "scope",
+      "scopes_matcher": "any",
+      "scopes": ["profile","email"],
+      "issuer": "http://localhost:9999/realms/SyngenityKeycloak",
+      "cookie_key": "TOKEN",
+      "disable_jwk_security": true,
+      "operation_debug": true
+  }
+        }
+    },
+       {
+      "endpoint": "/admin/packs/{id}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs/{id}",
+          "encoding": "no-op",
+          "method": "DELETE",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":  {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/packs/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/packs/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs:save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/packs/update",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs:update",
+          "encoding": "no-op",
+          "method": "PUT",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+       {
+      "endpoint": "/admin/packs/packMap/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs:packMap/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    },
+
+       {
+      "endpoint": "/admin/zones/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/zones/save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["http://host.docker.internal:9090"]
+        }
+      ],
+      "extra_config":   {
+        
+        }
+    }
+ ]
+}

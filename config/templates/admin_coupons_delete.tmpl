@@ -1,0 +1,17 @@
+{
+      "endpoint": "/admin/coupons/delete/{id}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/coupons/{id}",
+          "encoding": "no-op",
+          "method": "DELETE",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ],
+       "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

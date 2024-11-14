@@ -1,0 +1,17 @@
+ {
+      "endpoint": "/admin/customPlans/update",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/customPlans:update",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["{{ .service.admin_host }}"]
+        }
+      ],
+      "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

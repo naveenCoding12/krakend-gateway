@@ -1,0 +1,17 @@
+
+{
+      "endpoint": "/users/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization","Content-Type"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/users:save",
+          "encoding": "no-op",
+          "method": "POST",
+          "host":  ["{{ .service.eshop_host }}"]
+        }
+      ]
+    }

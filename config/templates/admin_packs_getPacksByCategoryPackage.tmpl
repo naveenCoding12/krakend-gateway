@@ -1,0 +1,17 @@
+ {
+      "endpoint": "/admin/packs/packMap/{id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs:packMap/{id}",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["{{ .service.admin_host }}"]
+        }
+      ],
+      "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

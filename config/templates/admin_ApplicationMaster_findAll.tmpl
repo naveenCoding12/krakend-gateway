@@ -1,0 +1,13 @@
+{
+      "endpoint": "/application/findAll",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/application:findAll",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ]
+    }

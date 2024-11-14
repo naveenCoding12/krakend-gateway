@@ -1,0 +1,20 @@
+{
+      "endpoint": "/categories/save",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Authorization"
+      ],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/categoryPackages/save",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["{{ .service.eshop_host }}"]
+        }
+      ],
+      "extra_config": {
+        {{ include "eshop_auth_config.tmpl" }}
+       },
+      "_comment": "This API requires a valid Keycloak token with the 'realm_user' role for access, ensuring secure and authorized requests."
+    }

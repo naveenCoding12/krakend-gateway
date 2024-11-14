@@ -1,0 +1,199 @@
+{
+  "version": 3,
+  "name": "API Gateway",
+  "port": "8080",
+  "timeout": "3s",
+  "output_encoding": "no-op",
+  "extra_config": {
+  "security/cors": {
+        "allow_origins": [
+          "*"
+        ],
+        "allow_methods": [
+          "GET",
+          "HEAD",
+          "POST"
+        ],
+        "expose_headers": [
+          "Content-Length",
+          "Content-Type",
+          "*"
+        ],
+        "allow_headers": [
+          "Accept-Language",
+          "*"
+        ],
+        "max_age": "12h",
+        "allow_credentials": false,
+        "debug": false
+      },
+    "telemetry/opentelemetry": {
+      "metric_reporting_period": 10,
+      "exporters": {
+        "prometheus": [
+          {
+            "port": 9091,
+            "name": "krakend"
+          }
+        ]
+      }
+    }
+  },
+  "endpoints": [
+      {{ template "auth-login.tmpl" .}},
+      {{ template "categories.tmpl" .}},
+      {{ template "categoriesSave.tmpl" .}},
+      {{ template "contactUsRequests.tmpl" .}},
+      {{ template "contactUsRequestSave.tmpl" .}},
+      {{ template "contactUsRequestDelete.tmpl" .}},
+      {{ template "contactUsResponseSave.tmpl" .}},
+      {{ template "contactUsTicketsById.tmpl" .}},
+      {{ template "contactUsTickets.tmpl" .}},
+      {{ template "countries.tmpl" .}},
+      {{ template "coupons.tmpl" .}},
+      {{ template "couponsValidCode.tmpl" .}},
+      {{ template "couponsGetUsersByCode.tmpl" .}},
+      {{ template "couponsByRegion.tmpl" .}},
+      {{ template "customPlanRequests.tmpl" .}},
+      {{ template "customPlanRequestsSave.tmpl" .}},
+      {{ template "customPlanRequestsCloseTicket.tmpl" .}},
+      {{ template "documents.tmpl" .}},
+      {{ template "documentsSave.tmpl" .}},
+      {{ template "documentsByCatIdAndStandId.tmpl" .}},
+      {{ template "documentsSearchByName.tmpl" .}},
+      {{ template "documentsUpdate.tmpl" .}},
+      {{ template "documentsDownload.tmpl" .}},
+      {{ template "documentsUpdateDiscount.tmpl" .}},
+      {{ template "documentsSearch.tmpl" .}},
+      {{ template "documentsGeAllDocuments.tmpl" .}},
+      {{ template "usersSave.tmpl" .}},
+      {{ template "usersLogin.tmpl" .}},
+      {{ template "users.tmpl" .}},
+      {{ template "usersUpdateRole.tmpl" .}},
+      {{ template "roles.tmpl" .}},
+      {{ template "usersSearch.tmpl"}},
+      {{ template "usersUpdate.tmpl"}},
+      {{ template "usersResetPassword.tmpl" .}},
+      {{ template "usersChangePassword.tmpl" .}},
+      {{ template "orders.tmpl" .}},
+      {{ template "ordersById.tmpl" .}},
+      {{ template "ordersUserOrderDetails.tmpl" .}},
+      {{ template "ordersSave.tmpl" .}},
+      {{ template "packs.tmpl" .}},
+      {{ template "packsDeleteById.tmpl"}},
+      {{ template "packsById.tmpl" .}},
+      {{ template "packsUpdate.tmpl" .}},
+      {{ template "packsPackMap.tmpl" .}},
+      {{ template "packsSave.tmpl" .}},
+      {{ template "signUpSave.tmpl" .}},
+      {{ template "signUpVerifyEmail.tmpl" .}},
+      {{ template "signUpResendOTP.tmpl" .}},
+      {{ template "signUpUpdateEmail.tmpl" .}},
+      {{ template "standardCategories.tmpl" .}},
+      {{ template "standardsGetCategory.tmpl" .}},
+      {{ template "standardsGetCategoryByStandardId.tmpl" .}},
+      {{ template "standards.tmpl" .}},
+      {{ template "translationsLangAbsolute.tmpl" .}},
+      {{ template "translationsKeyValue.tmpl" .}},
+      {{ template "translationsLocale.tmpl" .}},
+      {{ template "carts.tmpl" .}},
+      {{ template "cartsSave.tmpl" .}},
+      {{ template "cartsDelete.tmpl" .}},
+      {{ template "savedCartsSave.tmpl" .}},
+      {{ template "paymentsLogin.tmpl" .}},
+      {{ template "paymentsDownloadZip.tmpl" .}},
+      {{ template "paymentsInitiatePayment.tmpl" .}},
+
+      {{ template "admin_ApplicationMaster_masterAll.tmpl" .}},
+      {{ template "admin_ApplicationMaster_save.tmpl" .}},
+      {{ template "admin_ApplicationMaster_findAll.tmpl" .}},
+      {{ template "admin_ApplicationMaster_allPage.tmpl" .}},
+      {{ template "admin_ApplicationMaster_delete.tmpl" .}},
+      {{ template "admin_ApplicationMaster_upload.tmpl" .}},
+
+      {{ template "admin_category_loadAll.tmpl" .}},
+      {{ template "admin_category_delete.tmpl" .}},
+      {{ template "admin_category_findById.tmpl" .}},
+      {{ template "admin_category_save.tmpl" .}},
+      {{ template "admin_category_update.tmpl" .}},
+
+      {{ template "admin_configurations_loadAll.tmpl" .}},
+      {{ template "admin_configurations_save.tmpl" .}},
+      {{ template "admin_configurations_update.tmpl" .}},
+
+      {{ template "admin_contactUs_requests.tmpl" .}},
+      {{ template "admin_contactUs_requests_saveResponse.tmpl" .}},
+
+      {{ template "admin_coupons_loadAll.tmpl" .}},
+      {{ template "admin_coupons_getById.tmpl" .}},
+      {{ template "admin_coupons_save.tmpl" .}},
+      {{ template "admin_coupons_update.tmpl" .}},
+      {{ template "admin_coupons_delete.tmpl" .}},
+      {{ template "admin_coupons_getByCode.tmpl" .}},
+      {{ template "admin_coupons_countries.tmpl" .}},
+      {{ template "admin_coupons_importExcel.tmpl" .}},
+
+      {{ template "admin_customPlanRequest.tmpl" .}},
+      {{ template "admin_customPlanClose.tmpl" .}},
+
+      {{ template "admin_LanguagesMaster_upload.tmpl" .}},
+      {{ template "admin_LanguagesMaster_deleteByIds.tmpl" .}},
+      {{ template "admin_LanguagesMaster_update.tmpl" .}},
+      {{ template "admin_LanguagesMaster_allPage.tmpl" .}},
+      {{ template "admin_LanguagesMaster_saveAll.tmpl" .}},
+      {{ template "admin_LanguagesMaster_findAll.tmpl" .}},
+      
+      {{ template "admin_MessageKeyMaster_save.tmpl" .}},
+      {{ template "admin_MessageKeyMaster_upload.tmpl" .}},
+      {{ template "admin_MessageKeyMaster_findAll.tmpl" .}},
+      {{ template "admin_MessageKeyMaster_deleteByIds.tmpl" .}},
+      {{ template "admin_MessageKeyMaster_allPage.tmpl" .}},
+
+      {{ template "admin_roles_loadAll.tmpl" .}},
+      {{ template "admin_roles_save.tmpl" .}},
+
+      {{ template "admin_standardCategory_loadAll.tmpl" .}},
+      {{ template "admin_standardCategory_save.tmpl" .}},
+
+      {{ template "admin_standards_loadAll.tmpl" .}},
+      {{ template "admin_standards_findById.tmpl" .}},
+      {{ template "admin_standards_save.tmpl" .}},
+      {{ template "admin_standards_update.tmpl" .}},
+
+      {{ template "admin_users_loadAll.tmpl" .}},
+      {{ template "admin_users_login.tmpl" .}},
+
+      {{ template "admin_Translations_findAll.tmpl" .}},
+      {{ template "admin_Translations_save.tmpl" .}},
+      {{ template "admin_Translations_delete.tmpl" .}},
+      {{ template "admin_Translations_getLang.tmpl" .}},
+      {{ template "admin_Translations_upload.tmpl" .}},
+      {{ template "admin_Translations_allPage.tmpl" .}},
+      {{ template "admin_Translations_languages.tmpl" .}},
+      {{ template "admin_Translations_changeLanguage.tmpl" .}},
+      {{ template "admin_Translations_deleteAll.tmpl" .}},
+      {{ template "admin_Translations_getIds.tmpl" .}},
+      {{ template "admin_Translations_Versions.tmpl" .}},
+      {{ template "admin_Translations_swapLanguage.tmpl" .}},
+
+      {{ template "admin_categoryPackages_loadAll.tmpl" .}},
+      {{ template "admin_categoryPackages_findById.tmpl" .}},
+      {{ template "admin_categoryPackages_save.tmpl" .}},
+      {{ template "admin_categoryPackages_update.tmpl" .}},
+      {{ template "admin_categoryPackages_delete.tmpl" .}},
+
+      {{ template "admin_customPlans_getAllPlans.tmpl" .}},
+      {{ template "admin_customPlans_save.tmpl" .}},
+      {{ template "admin_customPlans_update.tmpl" .}},
+      {{ template "admin_customPlans_delete.tmpl" .}},
+
+      {{ template "admin_packs_loadAll.tmpl" .}},
+      {{ template "admin_packs_delete.tmpl" .}},
+      {{ template "admin_packs_findById.tmpl" .}},
+      {{ template "admin_packs_save.tmpl" .}},
+      {{ template "admin_packs_update.tmpl" .}},
+      {{ template "admin_packs_getPacksByCategoryPackage.tmpl" .}},
+
+      {{ template "admin_zone_save.tmpl" .}}
+ ]
+}

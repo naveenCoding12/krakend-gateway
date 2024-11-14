@@ -1,0 +1,18 @@
+{
+      "endpoint": "/admin/messageKey/findAll",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "input_query_Strings":["applicationPageId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/messageKey:findAll",
+          "encoding": "no-op",
+          "method": "GET",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ],
+       "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

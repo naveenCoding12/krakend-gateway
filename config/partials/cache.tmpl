@@ -1,0 +1,13 @@
+    "qos/http-cache": {
+  "@comment": "This API returns a cache-control: max-age=6000 so KrakenD will cache this for 60s"
+},
+"modifier/martian": {
+  "header.Modifier": {
+    "scope": [
+      "response"
+    ],
+    "name": "Cache-Control",
+    "value": "max-age=60, public",
+    "@comment": "We will change the max-age policy before KrakenD checks the content for caching. Now content is cached 60 seconds."
+  }
+}

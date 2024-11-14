@@ -1,0 +1,15 @@
+{
+      "endpoint": "/signUp/updateEmail",
+      "method": "PUT",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_strings":["userId","mail"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/signUp:updateEmail",
+          "encoding": "no-op",
+          "method": "PUT",
+         "host":  ["{{ .service.eshop_host }}"]
+        }
+      ]
+    }

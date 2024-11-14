@@ -1,0 +1,18 @@
+{
+      "endpoint": "/admin/translations/delete",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "input_query_Strings" :["translationId"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/translations:delete",
+          "encoding": "no-op",
+          "method": "POST",
+          "host": ["{{ .service.admin_host }}"]
+        }
+      ],
+       "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

@@ -1,0 +1,35 @@
+version: "3"
+services:
+  krakend:
+    image: devopsfaith/krakend:watch
+    volumes:
+      - .:/etc/krakend
+    ports:
+      - "8080:8080"
+    environment:
+      - FC_ENABLE=1
+      - FC_SETTINGS=config/settings/local
+      - FC_PARTIALS=config/partials
+      - SERVICE_NAME=KrakenD API Gateway
+      - FC_TEMPLATES=config/templates
+      - FC_OUT=out.json
+    command: [ "run", "-dc", "krakend.tmpl", "" ]
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "1111:9090"  # Prometheus runs on port 1111
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: 1234
+      GF_AUT_ANONYMOUS_ENABLED: "true"
+    volumes:
+      - "./conf/provisioning/datasources:/etc/grafana/provisioning/datasources"
+      - "./conf/provisioning/dashboards:/etc/grafana/provisioning/dashboards"
+      - "./conf/data/dashboards:/var/lib/grafana/dashboards"

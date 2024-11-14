@@ -1,0 +1,14 @@
+  {
+      "endpoint": "/admin/countries",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/countries",
+          "encoding": "no-op",
+          "method": "GET",
+           "host":  ["{{ .service.admin_host }}"]
+        }
+      ]
+    }

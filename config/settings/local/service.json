@@ -1,0 +1,5 @@
+{
+    "eshop_host":"http://host.docker.internal:9092",
+    "admin_host":"http://host.docker.internal:9090",
+    "auth_host":"http://host.docker.internal:9099"
+}

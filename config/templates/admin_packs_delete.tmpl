@@ -1,0 +1,17 @@
+ {
+      "endpoint": "/admin/packs/{id}",
+      "method": "DELETE",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/packs/{id}",
+          "encoding": "no-op",
+          "method": "DELETE",
+           "host":  ["{{ .service.admin_host }}"]
+        }
+      ],
+      "extra_config":  {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }

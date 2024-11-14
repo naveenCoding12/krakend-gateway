@@ -1,0 +1,17 @@
+{
+      "endpoint": "/transactions/{locale}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/transactions/{locale}",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["{{ .service.eshop_host }}"]
+        }
+      ],
+      "extra_config":  {
+        {{ include "eshop_auth_config.tmpl" }}
+       }
+    }

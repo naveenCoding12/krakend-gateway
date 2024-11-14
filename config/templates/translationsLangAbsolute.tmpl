@@ -1,0 +1,14 @@
+{
+      "endpoint": "/translations/langAbsolute",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_query_strings":["fromEshop"],
+      "backend": [
+        {
+          "url_pattern": "/eshop/v1/translations:langAbsolute",
+          "encoding": "no-op",
+          "method": "GET",
+          "host":  ["{{ .service.eshop_host }}"]
+        }
+      ]
+    }

@@ -1,0 +1,17 @@
+ {
+      "endpoint": "/admin/language/saveAll",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "input_headers": ["Authorization","Content-Type"],
+      "backend": [
+        {
+          "url_pattern": "/admin/v1/language:saveAll",
+          "encoding": "no-op",
+          "method": "POST",
+           "host":  ["{{ .service.admin_host }}"]
+        }
+      ],
+      "extra_config":   {
+        {{ include "admin_auth_config.tmpl" }}
+        }
+    }
